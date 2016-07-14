@@ -11,6 +11,10 @@ def test_bug(self):
     self.assertEquals(1, a.c_count)
 ```
 
+```sql
+SELECT "bug_a"."id", COUNT("bug_b"."id") AS "b_count", COUNT("bug_c"."id") AS "c_count" FROM "bug_a" LEFT OUTER JOIN "bug_b" ON ("bug_a"."id" = "bug_b"."a_id") LEFT OUTER JOIN "bug_c" ON ("bug_a"."id" = "bug_c"."a_id") GROUP BY "bug_a"."id"
+```
+
 Reproduces on `sqlite3` as well as heroku-hosted `postgresql`.
 
 mailto:aur@feezback.com
