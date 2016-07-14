@@ -12,7 +12,29 @@ def test_bug(self):
 ```
 
 ```sql
-SELECT "bug_a"."id", COUNT("bug_b"."id") AS "b_count", COUNT("bug_c"."id") AS "c_count" FROM "bug_a" LEFT OUTER JOIN "bug_b" ON ("bug_a"."id" = "bug_b"."a_id") LEFT OUTER JOIN "bug_c" ON ("bug_a"."id" = "bug_c"."a_id") GROUP BY "bug_a"."id"
+SELECT "bug_a"."id",
+       Count("bug_b"."id") AS "b_count",
+       Count("bug_c"."id") AS "c_count"
+FROM   "bug_a"
+       LEFT OUTER JOIN "bug_b"
+                    ON ( "bug_a"."id" = "bug_b"."a_id" )
+       LEFT OUTER JOIN "bug_c"
+                    ON ( "bug_a"."id" = "bug_c"."a_id" )
+GROUP  BY "bug_a"."id"
+```
+
+I think it should be:
+
+```sql
+SELECT "bug_a"."id",
+       Count(distinct "bug_b"."id") AS "b_count",
+       Count(distinct "bug_c"."id") AS "c_count"
+FROM   "bug_a"
+       LEFT OUTER JOIN "bug_b"
+                    ON ( "bug_a"."id" = "bug_b"."a_id" )
+       LEFT OUTER JOIN "bug_c"
+                    ON ( "bug_a"."id" = "bug_c"."a_id" )
+GROUP  BY "bug_a"."id"
 ```
 
 Reproduces on `sqlite3` as well as heroku-hosted `postgresql`.
